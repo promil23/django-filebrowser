@@ -6,6 +6,7 @@ var FileBrowserDialogue = {
     },
     fileSubmit : function (FileURL) {
         var URL = FileURL;
+        /*
         var win = tinyMCEPopup.getWindowArg("window");
         
         // insert information now
@@ -18,11 +19,14 @@ var FileBrowserDialogue = {
             if (win.ImageDialog.showPreviewImage)
                 win.ImageDialog.showPreviewImage(URL);
         }
+        */
         
         // close popup window
-        tinyMCEPopup.close();
+        //tinyMCEPopup.close();
+        top.tinymce.activeEditor.windowManager.getParams().oninsert(FileURL);
+        top.tinymce.activeEditor.windowManager.close();
     }
 }
 
-tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
+//tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
 
