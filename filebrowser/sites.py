@@ -573,8 +573,8 @@ class FileBrowserSite(object):
                 full_path = FileObject(smart_text(file_name), site=self).path_full
 
             # set permissions
-            if DEFAULT_PERMISSIONS is not None:
-                os.chmod(full_path, DEFAULT_PERMISSIONS)
+            #if DEFAULT_PERMISSIONS is not None:
+            #    os.chmod(full_path, DEFAULT_PERMISSIONS)
 
             f = FileObject(smart_text(file_name), site=self)
             signals.filebrowser_post_upload.send(sender=request, path=folder, file=f, site=self)

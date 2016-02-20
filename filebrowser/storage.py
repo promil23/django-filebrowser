@@ -4,6 +4,7 @@ import os
 import shutil
 
 from django.core.files.move import file_move_safe
+from django.core.files.base import ContentFile
 from django.utils.encoding import smart_text
 
 from filebrowser.base import FileObject
@@ -77,9 +78,8 @@ class FileSystemStorageMixin(StorageMixin):
 
 
 class S3BotoStorageMixin(StorageMixin):
-
     def isfile(self, name):
-        return self.exists(name)
+        return self.exists(name) and self.size(name) > 0
 
     def isdir(self, name):
         # That's some inefficient implementation...
@@ -90,14 +90,23 @@ class S3BotoStorageMixin(StorageMixin):
 
         if self.isfile(name):
             return False
+        elif self.exists(name) and self.size(name) == 0: 
+            return True
+        else:
+            return False
 
+        '''
         name = self._normalize_name(self._clean_name(name))
-        dirlist = self.bucket.list(self._encode_name(name))
+        encoded_name = self._encode_name(name)
+        print(encoded_name)
+        return self.exists(encoded_name)# and super.isdir(encoded_name)
+        #dirlist = self.bucket.list(self._encode_name(name))
 
         # Check whether the iterator is empty
-        for item in dirlist:
-            return True
-        return False
+        #for item in dirlist:
+        #    return True
+        #return False
+        '''
 
     def move(self, old_file_name, new_file_name, allow_overwrite=False):
 
@@ -118,7 +127,7 @@ class S3BotoStorageMixin(StorageMixin):
         self.delete(old_file_name)
 
     def makedirs(self, name):
-        pass
+        self.save(name + "/.folder", ContentFile(""))
 
     def rmtree(self, name):
         name = self._normalize_name(self._clean_name(name))
